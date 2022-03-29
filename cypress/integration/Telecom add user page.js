@@ -11,14 +11,13 @@ describe('Guru99 demo telecom app', () => {
   })
 
 //positive tests
-  it('All elements are visible', () => {
+  it('All elements are visible and fields are blank', () => {
     cy.contains('Background Check').should('be.visible')
     cy.get('#fname').should('be.visible').should('have.value', '')
-    cy.get('#lname').should('be.visible')
-    cy.get('#email').should('be.visible')
-    //cy.get('#message').should('be.visible')
+    cy.get('#lname').should('be.visible').should('have.value', '')
+    cy.get('#email').should('be.visible').should('have.value', '')
     cy.get(':nth-child(7) > #message').should('be.visible')
-    cy.get('#telephoneno').should('be.visible')
+    cy.get('#telephoneno').should('be.visible').should('have.value', '')
     cy.get('[type="submit"]').should('exist').should('be.visible')
     cy.get('[type="reset"]').should('exist').should('be.visible')
   })
@@ -42,38 +41,24 @@ describe('Guru99 demo telecom app', () => {
       return false
     })
     cy.get('label[for="done"]').click()
-    cy.get('#fname').type('Sarra')
-    cy.get('#lname').type('Parker')
-    cy.get('#email').type('sarra@mail.com')
-    cy.get(':nth-child(7) > #message').type('10021 New york Manhetten 245 East 73rd Street')
-    cy.get('#telephoneno').type('+12888198')
+    cy.correctUserInfo()
     cy.get('input[name="submit"]').click()
     cy.url().should('contain', 'https://demo.guru99.com/telecom/access.php?uid=')
   })
 
   it('Submit with all fields filled and PENDING radio button', () => { 
-    //тут была ошибка ReferenceError: v6 is not defined
-    //но всё работало с ней, поэтому я использовала cy.on('uncaught:exception'
     cy.on('uncaught:exception', (err, runnable) => {
       return false
     })
     cy.get('label[for="pending"]').click()
-    cy.get('#fname').type('Big')
-    cy.get('#lname').type('Elton')
-    cy.get('#email').type('stocks@mail.com')
-    cy.get(':nth-child(7) > #message').type('10021 New york Manhetten 245 East 73rd Street')
-    cy.get('#telephoneno').type('+128881')
+    cy.correctUserInfo()
     cy.get('input[name="submit"]').click()
     cy.url().should('contain', 'https://demo.guru99.com/telecom/access.php?uid=')
   })
 
   it('Reset button', () => {
     cy.get('label[for="done"]').click()
-    cy.get('#fname').type('Sarra')
-    cy.get('#lname').type('Parker')
-    cy.get('#email').type('sarra@mail.com')
-    cy.get(':nth-child(7) > #message').type('10021 New york Manhetten 245 East 73rd Street')
-    cy.get('#telephoneno').type('+12888198')
+    cy.correctUserInfo()
     cy.get('input[type="reset"]').click()
     cy.get('input#done').should('not.be.checked')
     cy.get('#fname').should('have.value', '')
@@ -86,11 +71,7 @@ describe('Guru99 demo telecom app', () => {
 //negative tests
  it('It is not possible to submit with invalid data', () => { 
     cy.get('label[for="done"]').click()
-    cy.get('#fname').type('Sarra!')
-    cy.get('#lname').type('Pa*rker')
-    cy.get('#email').type('sarra@mail.')
-    cy.get(':nth-child(7) > #message').type('! New York')
-    cy.get('#telephoneno').type('My number')
+    cy.notCorrectUserInfo()
     cy.get('input[name="submit"]').click()
     cy.get('#message').should('have.text', 'Special characters are not allowed').and('be.visible')
     cy.get('#message50').should('have.text', 'Special characters are not allowed').and('be.visible')
@@ -118,13 +99,8 @@ it('Submit after reset fields filled with valid data is not possible', () => {
     cy.on('window:alert', stub) 
 
     cy.get('label[for="done"]').click()
-    cy.get('#fname').type('Sarra')
-    cy.get('#lname').type('Parker')
-    cy.get('#email').type('sarra@mail.com')
-    cy.get(':nth-child(7) > #message').type('10021 New york Manhetten 245 East 73rd Street')
-    cy.get('#telephoneno').type('+12888198')
+    cy.correctUserInfo()
     cy.get('input[type="reset"]').click()
-
     cy.get('input[name="submit"]').click().then(() => {
       expect(stub).to.be.called
     })
@@ -140,11 +116,7 @@ it('Submit after reset fields filled with valid data is not possible', () => {
     cy.on('window:alert', stub) 
 
     cy.get('label[for="done"]').click()
-    cy.get('#fname').type('Sarra!')
-    cy.get('#lname').type('Pa*rker')
-    cy.get('#email').type('sarra@mail.')
-    cy.get(':nth-child(7) > #message').type('! New York')
-    cy.get('#telephoneno').type('My number')
+    cy.notCorrectUserInfo()
     cy.get('input[type="reset"]').click()
     cy.get('input[name="submit"]').click().then(() => {
       expect(stub).to.be.calledWith('please fill all fields')
