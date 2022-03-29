@@ -21,10 +21,12 @@ jobs:
           
   cypress-run-firefox:
     runs-on: ubuntu-latest
-    container: cypress/browsers:node16.13.2-chrome97-ff96
+    container: cypress/browsers:node14.17.0-chrome88-ff89
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Check
+        run: firefox --version
 
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
