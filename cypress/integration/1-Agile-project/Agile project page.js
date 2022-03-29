@@ -10,10 +10,10 @@ describe('Guru99 demo Agile project', () => {
         cy.contains('Guru99 Bank').should('be.visible')
         cy.contains('UserID').should('be.visible')
         cy.contains('Password').should('be.visible')
-        cy.get('input[name="uid"]').should('be.visible').should('have.value', '')
-        cy.get('#input[name="password]').should('be.visible').should('have.value', '')
-        cy.get('#input[name="btnLogin"]').should('be.visible')
-        cy.get('#input[name="btnReset"]').should('be.visible')
+        cy.get('input[name="uid"]').should('be.visible').and('have.value', '')
+        cy.get('input[name="password"]').should('be.visible').and('have.value', '')
+        cy.get('input[name="btnLogin"]').should('be.visible')
+        cy.get('input[name="btnReset"]').should('be.visible')
     })
 
 
@@ -29,7 +29,7 @@ describe('Guru99 demo Agile project', () => {
    		})
     })
 
-    //can't check this because of strange error vindow behaviour
+    //can't check this because of strange error window behaviour
     /* it('Login with wrong password is not possible', () => {
 
         const stub = cy.stub()
