@@ -21,7 +21,9 @@ jobs:
           
   cypress-run-firefox:
     runs-on: ubuntu-latest
-    container: cypress/browsers:node14.17.0-chrome88-ff89
+    container: 
+      image: cypress/browsers:node14.17.0-chrome88-ff89
+      options: --user 1001
     steps:
       - name: Checkout
         uses: actions/checkout@v2
